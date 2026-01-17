@@ -20,9 +20,19 @@ export default function Checkout({ cart, setCart }) {
       return;
     }
 
-    // In a real app, here you'd send order to backend or payment gateway
+    // Build a detailed order summary string
+    const orderDetails = cart
+      .map(
+        (item) =>
+          `${item.qty} x ${item.name} @ Ksh ${item.price} = Ksh ${
+            item.price * item.qty
+          }`
+      )
+      .join("\n");
+
+    // Show alert with detailed order summary
     alert(
-      `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\nTotal: Ksh ${total}`
+      `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
     );
 
     // Clear cart and navigate home
