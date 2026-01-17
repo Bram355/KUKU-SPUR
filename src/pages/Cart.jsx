@@ -91,34 +91,7 @@ export default function Cart({ cart, setCart }) {
             <h2 style={{ color: "#ff6600" }}>Total: Ksh {total}</h2>
           </div>
 
-          <button
-            onClick={() => navigate("/checkout")}
-
-            style={{
-              marginTop: "20px",
-              backgroundColor: "#ff6600",
-              color: "#fff",
-              border: "none",
-              padding: "14px 30px",
-              borderRadius: "30px",
-              cursor: "pointer",
-              fontSize: "16px",
-              fontWeight: "bold",
-              width: "100%",
-              boxShadow: "0 3px 6px rgba(0,0,0,0.15)",
-              transition: "background 0.2s, transform 0.2s",
-            }}
-            onMouseOver={(e) => {
-              e.target.style.background = "#e05500";
-              e.target.style.transform = "scale(1.03)";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.background = "#ff6600";
-              e.target.style.transform = "scale(1)";
-            }}
-          >
-            Checkout
-          </button>
+         
 
           <button
   onClick={() => navigate("/checkout")} // <-- updated to navigate

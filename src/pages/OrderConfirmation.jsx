@@ -93,32 +93,7 @@ export default function OrderConfirmation() {
           Back to Home
         </button>
 
-        <button
-          onClick={() => navigate("/orders")}
-          style={{
-            flex: 1,
-            backgroundColor: "#ffa500",
-            color: "#fff",
-            border: "none",
-            padding: "14px 20px",
-            borderRadius: "30px",
-            cursor: "pointer",
-            fontSize: "16px",
-            fontWeight: "bold",
-            boxShadow: "0 3px 6px rgba(0,0,0,0.15)",
-            transition: "background 0.2s, transform 0.2s",
-          }}
-          onMouseOver={(e) => {
-            e.target.style.background = "#e69500";
-            e.target.style.transform = "scale(1.03)";
-          }}
-          onMouseOut={(e) => {
-            e.target.style.background = "#ffa500";
-            e.target.style.transform = "scale(1)";
-          }}
-        >
-          View My Orders
-        </button>
+       
       </div>
     </div>
   );
