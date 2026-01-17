@@ -38,10 +38,10 @@ export default function Products({ cart, setCart }) {
         }}
       >
         <h1 style={{ fontSize: "28px", color: "#ff6600", marginBottom: "10px" }}>
-          Fresh Chicken Delivered
+          KUKU SPUR - Fresh Chicken Delivered
         </h1>
         <p style={{ fontSize: "16px", color: "#8b5e3c" }}>
-          Select your favorite chicken parts and order now: +254701254244!
+          Select your favorite chicken parts and order now: +254710555861!
         </p>
       </div>
 
