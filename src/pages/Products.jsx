@@ -41,7 +41,7 @@ export default function Products({ cart, setCart }) {
           KUKU SPUR - Fresh Chicken Delivered
         </h1>
         <p style={{ fontSize: "16px", color: "#8b5e3c" }}>
-          Select your favorite chicken parts and order now: +254710555861!
+          Select your favorite chicken parts and order now: +254710555861
         </p>
       </div>
 
