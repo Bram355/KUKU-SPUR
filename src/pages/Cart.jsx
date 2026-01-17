@@ -34,9 +34,19 @@ export default function Cart({ cart, setCart }) {
                 justifyContent: "space-between",
                 alignItems: "center",
                 marginBottom: "15px",
-                padding: "10px",
+                padding: "15px",
                 borderRadius: "10px",
                 background: "#fff3e0",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 4px 10px rgba(0,0,0,0.1)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 2px 5px rgba(0,0,0,0.05)";
               }}
             >
               <div>
@@ -57,7 +67,10 @@ export default function Cart({ cart, setCart }) {
                     padding: "5px 10px",
                     cursor: "pointer",
                     marginTop: "5px",
+                    transition: "background 0.2s",
                   }}
+                  onMouseOver={(e) => (e.target.style.background = "#e04300")}
+                  onMouseOut={(e) => (e.target.style.background = "#ff4d00")}
                 >
                   Remove
                 </button>
@@ -71,9 +84,11 @@ export default function Cart({ cart, setCart }) {
               padding: "15px",
               borderTop: "2px solid #ff6600",
               textAlign: "right",
+              backgroundColor: "#fff7f0",
+              borderRadius: "8px",
             }}
           >
-            <h2>Total: Ksh {total}</h2>
+            <h2 style={{ color: "#ff6600" }}>Total: Ksh {total}</h2>
           </div>
 
           <button
@@ -89,6 +104,16 @@ export default function Cart({ cart, setCart }) {
               fontSize: "16px",
               fontWeight: "bold",
               width: "100%",
+              boxShadow: "0 3px 6px rgba(0,0,0,0.15)",
+              transition: "background 0.2s, transform 0.2s",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = "#e05500";
+              e.target.style.transform = "scale(1.03)";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = "#ff6600";
+              e.target.style.transform = "scale(1)";
             }}
           >
             Checkout
@@ -107,6 +132,15 @@ export default function Cart({ cart, setCart }) {
               fontSize: "16px",
               fontWeight: "bold",
               width: "100%",
+              transition: "background 0.2s, color 0.2s",
+            }}
+            onMouseOver={(e) => {
+              e.target.style.background = "#ff6600";
+              e.target.style.color = "#fff";
+            }}
+            onMouseOut={(e) => {
+              e.target.style.background = "#fff";
+              e.target.style.color = "#ff6600";
             }}
           >
             Continue Shopping
