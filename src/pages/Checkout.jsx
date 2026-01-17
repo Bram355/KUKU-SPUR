@@ -20,24 +20,18 @@ export default function Checkout({ cart, setCart }) {
       return;
     }
 
-    // Build a detailed order summary string
-    const orderDetails = cart
-      .map(
-        (item) =>
-          `${item.qty} x ${item.name} @ Ksh ${item.price} = Ksh ${
-            item.price * item.qty
-          }`
-      )
-      .join("\n");
+    // Navigate to Order Confirmation page with order data
+    navigate("/order-confirmation", {
+      state: {
+        name,
+        cart,
+        total,
+        paymentMethod,
+      },
+    });
 
-    // Show alert with detailed order summary
-    alert(
-      `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
-    );
-
-    // Clear cart and navigate home
+    // Clear cart
     setCart([]);
-    navigate("/");
   }
 
   return (
@@ -149,7 +143,6 @@ export default function Checkout({ cart, setCart }) {
             }}
           >
             <option>Cash on Delivery</option>
-            {/* You can add other payment options later */}
           </select>
 
           {/* Place Order Button */}
