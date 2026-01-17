@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // <-- added
+import { useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { products } from "../data/products";
 
-export default function Products() {
-  const [cart, setCart] = useState([]);
-  const navigate = useNavigate(); // <-- added
+export default function Products({ cart, setCart }) {
+  const navigate = useNavigate();
 
   // Add product to cart
   function addToCart(product) {
@@ -13,9 +11,7 @@ export default function Products() {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, qty: item.qty + 1 }
-            : item
+          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
         );
       }
       return [...prev, { ...product, qty: 1 }];
@@ -45,8 +41,7 @@ export default function Products() {
           Fresh Chicken Delivered
         </h1>
         <p style={{ fontSize: "16px", color: "#8b5e3c" }}>
-          Select your favorite chicken parts and order now:
-          +254701254244!
+          Select your favorite chicken parts and order now: +254701254244!
         </p>
       </div>
 
@@ -69,10 +64,7 @@ export default function Products() {
             onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
             onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <ProductCard
-              product={product}
-              onAdd={() => addToCart(product)}
-            />
+            <ProductCard product={product} onAdd={() => addToCart(product)} />
           </div>
         ))}
       </div>
@@ -88,7 +80,7 @@ export default function Products() {
         }}
       >
         <button
-          onClick={() => navigate("/cart")} // <-- added navigation
+          onClick={() => navigate("/cart")}
           style={{
             backgroundColor: "#ff6600",
             color: "#fff",
