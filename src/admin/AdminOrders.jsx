@@ -9,10 +9,14 @@ export default function AdminOrders() {
     const fetchOrders = async () => {
       try {
         const snapshot = await getDocs(ordersCollection);
-        const fetchedOrders = snapshot.docs.map((doc) => ({
+        let fetchedOrders = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
+
+        // Sort orders by createdAt descending (newest first)
+        fetchedOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
         setOrders(fetchedOrders);
       } catch (error) {
         console.error("Error fetching orders:", error);
