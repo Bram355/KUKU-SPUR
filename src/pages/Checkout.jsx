@@ -10,28 +10,54 @@ export default function Checkout({ cart, setCart }) {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
 
-  // Total price
+  // Calculate total price
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-  // Place order
   function placeOrder() {
     if (!name || !phone || !address) {
       alert("Please fill all your details!");
       return;
     }
 
-    // Navigate to Order Confirmation page with order data
-    navigate("/order-confirmation", {
-      state: {
-        name,
-        cart,
-        total,
-        paymentMethod,
-      },
-    });
+    // Build order object
+    const order = {
+      id: Date.now(), // unique order ID
+      name,
+      phone,
+      address,
+      paymentMethod,
+      items: cart,
+      total,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
 
-    // Clear cart
+    // Get existing orders from localStorage
+    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+    // Add new order
+    orders.push(order);
+
+    // Save back to localStorage
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    // Show success alert with order summary
+    const orderDetails = cart
+      .map(
+        (item) =>
+          `${item.qty} x ${item.name} @ Ksh ${item.price} = Ksh ${
+            item.price * item.qty
+          }`
+      )
+      .join("\n");
+
+    alert(
+      `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
+    );
+
+    // Clear cart and navigate home
     setCart([]);
+    navigate("/");
   }
 
   return (
