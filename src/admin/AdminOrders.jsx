@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
 
-  // Load orders from localStorage
+  // Load orders from localStorage on mount
   useEffect(() => {
     const savedOrders = JSON.parse(localStorage.getItem("orders")) || [];
     setOrders(savedOrders);
   }, []);
 
-  // Update order status and optionally delete if completed
+  // Update order status and optionally delete if completed or cancelled
   const updateStatus = (id, newStatus) => {
     let updatedOrders;
 
-    if (newStatus.toLowerCase() === "completed") {
+    if (["completed", "cancelled"].includes(newStatus.toLowerCase())) {
       // Remove order from history
       updatedOrders = orders.filter((order) => order.id !== id);
     } else {
@@ -48,11 +48,13 @@ export default function AdminOrders() {
             <h3 style={{ margin: "0 0 5px 0" }}>
               Order #{order.id} — {order.status}
             </h3>
+
             <p style={{ margin: "0 0 5px 0" }}>
               <strong>Name:</strong> {order.name} <br />
               <strong>Phone:</strong> {order.phone} <br />
               <strong>Address:</strong> {order.address}
             </p>
+
             <p style={{ margin: "0 0 10px 0" }}>
               <strong>Payment Method:</strong> {order.paymentMethod} <br />
               <strong>Total:</strong> Ksh {order.total}
