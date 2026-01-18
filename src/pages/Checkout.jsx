@@ -52,7 +52,20 @@ export default function Checkout({ cart, setCart }) {
       );
 
       // WhatsApp message
-      const sanitizedPhone = phone.replace(/\D/g, ""); // remove non-numeric characters
+      function formatKenyanPhone(phone) {
+  let cleaned = phone.replace(/\D/g, "");
+
+  if (cleaned.startsWith("0")) {
+    cleaned = "254" + cleaned.slice(1);
+  } else if (cleaned.startsWith("7")) {
+    cleaned = "254" + cleaned;
+  }
+
+  return cleaned;
+}
+
+const whatsappPhone = formatKenyanPhone(phone);
+
       const whatsappMessage = `Hello, I would like to place an order:
 
 Name: ${name}
