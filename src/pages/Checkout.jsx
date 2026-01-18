@@ -34,7 +34,7 @@ export default function Checkout({ cart, setCart }) {
 
     try {
       // Save order to Firestore
-      await addDoc(ordersCollection, order);
+      const docRef = await addDoc(ordersCollection, order);
 
       // Build order summary string
       const orderDetails = cart
@@ -51,7 +51,8 @@ export default function Checkout({ cart, setCart }) {
         `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
       );
 
-      // Open WhatsApp with pre-filled message
+      // WhatsApp message
+      const sanitizedPhone = phone.replace(/\D/g, ""); // remove non-numeric characters
       const whatsappMessage = `Hello, I would like to place an order:
 
 Name: ${name}
@@ -63,8 +64,7 @@ Order Total: Ksh ${total}
 Order Details:
 ${orderDetails}`;
 
-      const whatsappNumber = "254701254244"; // Replace with your WhatsApp number
-      const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      const whatsappURL = `https://wa.me/${sanitizedPhone}?text=${encodeURIComponent(
         whatsappMessage
       )}`;
       window.open(whatsappURL, "_blank");
