@@ -9,11 +9,20 @@ export default function AdminOrders() {
     setOrders(savedOrders);
   }, []);
 
-  // Update order status and save back to localStorage
+  // Update order status and optionally delete if completed
   const updateStatus = (id, newStatus) => {
-    const updatedOrders = orders.map((order) =>
-      order.id === id ? { ...order, status: newStatus } : order
-    );
+    let updatedOrders;
+
+    if (newStatus.toLowerCase() === "completed") {
+      // Remove order from history
+      updatedOrders = orders.filter((order) => order.id !== id);
+    } else {
+      // Just update status
+      updatedOrders = orders.map((order) =>
+        order.id === id ? { ...order, status: newStatus } : order
+      );
+    }
+
     setOrders(updatedOrders);
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
   };
