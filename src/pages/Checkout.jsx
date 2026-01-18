@@ -41,7 +41,7 @@ export default function Checkout({ cart, setCart }) {
     // Save back to localStorage
     localStorage.setItem("orders", JSON.stringify(orders));
 
-    // Show success alert with order summary
+    // Build order summary string
     const orderDetails = cart
       .map(
         (item) =>
@@ -51,9 +51,28 @@ export default function Checkout({ cart, setCart }) {
       )
       .join("\n");
 
+    // Show alert
     alert(
       `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
     );
+
+    // Open WhatsApp with pre-filled message
+    const whatsappMessage = `Hello, I would like to place an order:
+
+Name: ${name}
+Phone: ${phone}
+Address: ${address}
+Payment: ${paymentMethod}
+Order Total: Ksh ${total}
+
+Order Details:
+${orderDetails}`;
+
+    const whatsappNumber = "254701234567"; // <-- Replace with your WhatsApp number
+    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      whatsappMessage
+    )}`;
+    window.open(whatsappURL, "_blank");
 
     // Clear cart and navigate home
     setCart([]);
