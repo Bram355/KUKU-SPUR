@@ -27,6 +27,20 @@ export default function AdminOrders() {
     localStorage.setItem("orders", JSON.stringify(updatedOrders));
   };
 
+  // Function to contact customer via WhatsApp
+  const contactWhatsApp = (order) => {
+    const message = `Hello ${order.name}, regarding your order #${order.id}:
+
+Items:
+${order.items.map(item => `${item.qty} x ${item.name} = Ksh ${item.qty * item.price}`).join("\n")}
+
+Total: Ksh ${order.total}`;
+
+    // Replace with your own WhatsApp number if you want the message to go to you
+    const whatsappURL = `https://wa.me/${order.phone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, "_blank");
+  };
+
   return (
     <div style={{ padding: "20px", fontFamily: "'Segoe UI', sans-serif" }}>
       <h1 style={{ color: "#ff6600", marginBottom: "20px" }}>Admin – Orders</h1>
@@ -86,6 +100,7 @@ export default function AdminOrders() {
                 borderRadius: "6px",
                 border: "1px solid #ccc",
                 cursor: "pointer",
+                marginRight: "10px",
               }}
             >
               <option>pending</option>
@@ -93,6 +108,22 @@ export default function AdminOrders() {
               <option>completed</option>
               <option>cancelled</option>
             </select>
+
+            {/* WhatsApp button */}
+            <button
+              onClick={() => contactWhatsApp(order)}
+              style={{
+                padding: "8px 15px",
+                backgroundColor: "#25D366",
+                color: "#fff",
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              WhatsApp Customer
+            </button>
           </div>
         ))
       )}
