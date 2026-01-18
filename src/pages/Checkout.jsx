@@ -68,7 +68,7 @@ Order Total: Ksh ${total}
 Order Details:
 ${orderDetails}`;
 
-    const whatsappNumber = "254701234567"; // <-- Replace with your WhatsApp number
+    const whatsappNumber = "254701254244"; // <-- Replace with your WhatsApp number
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       whatsappMessage
     )}`;
