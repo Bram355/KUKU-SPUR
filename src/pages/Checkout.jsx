@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { db, ordersCollection, addDoc } from "../firebase";
 
 export default function Checkout({ cart, setCart }) {
   const navigate = useNavigate();
@@ -10,10 +11,10 @@ export default function Checkout({ cart, setCart }) {
   const [address, setAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
 
-  // Calculate total price
+  // Total price
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-  function placeOrder() {
+  async function placeOrder() {
     if (!name || !phone || !address) {
       alert("Please fill all your details!");
       return;
@@ -21,7 +22,6 @@ export default function Checkout({ cart, setCart }) {
 
     // Build order object
     const order = {
-      id: Date.now(), // unique order ID
       name,
       phone,
       address,
@@ -32,32 +32,27 @@ export default function Checkout({ cart, setCart }) {
       createdAt: new Date().toISOString(),
     };
 
-    // Get existing orders from localStorage
-    const orders = JSON.parse(localStorage.getItem("orders")) || [];
+    try {
+      // Save order to Firestore
+      await addDoc(ordersCollection, order);
 
-    // Add new order
-    orders.push(order);
+      // Build order summary string
+      const orderDetails = cart
+        .map(
+          (item) =>
+            `${item.qty} x ${item.name} @ Ksh ${item.price} = Ksh ${
+              item.qty * item.price
+            }`
+        )
+        .join("\n");
 
-    // Save back to localStorage
-    localStorage.setItem("orders", JSON.stringify(orders));
+      // Show alert
+      alert(
+        `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
+      );
 
-    // Build order summary string
-    const orderDetails = cart
-      .map(
-        (item) =>
-          `${item.qty} x ${item.name} @ Ksh ${item.price} = Ksh ${
-            item.price * item.qty
-          }`
-      )
-      .join("\n");
-
-    // Show alert
-    alert(
-      `Order placed successfully!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${paymentMethod}\n\nOrder Summary:\n${orderDetails}\n\nTotal: Ksh ${total}`
-    );
-
-    // Open WhatsApp with pre-filled message
-    const whatsappMessage = `Hello, I would like to place an order:
+      // Open WhatsApp with pre-filled message
+      const whatsappMessage = `Hello, I would like to place an order:
 
 Name: ${name}
 Phone: ${phone}
@@ -68,15 +63,19 @@ Order Total: Ksh ${total}
 Order Details:
 ${orderDetails}`;
 
-    const whatsappNumber = "254701254244"; // <-- Replace with your WhatsApp number
-    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-      whatsappMessage
-    )}`;
-    window.open(whatsappURL, "_blank");
+      const whatsappNumber = "254701254244"; // Replace with your WhatsApp number
+      const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+        whatsappMessage
+      )}`;
+      window.open(whatsappURL, "_blank");
 
-    // Clear cart and navigate home
-    setCart([]);
-    navigate("/");
+      // Clear cart and navigate home
+      setCart([]);
+      navigate("/");
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Failed to place order. Please try again.");
+    }
   }
 
   return (

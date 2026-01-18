@@ -1,30 +1,48 @@
 import { useEffect, useState } from "react";
+import { db, ordersCollection, getDocs, doc, updateDoc, deleteDoc } from "../firebase";
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
 
-  // Load orders from localStorage on mount
+  // Load orders from Firestore on mount
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    setOrders(savedOrders);
+    const fetchOrders = async () => {
+      try {
+        const snapshot = await getDocs(ordersCollection);
+        const fetchedOrders = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setOrders(fetchedOrders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
   }, []);
 
   // Update order status and optionally delete if completed or cancelled
-  const updateStatus = (id, newStatus) => {
-    let updatedOrders;
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const orderDoc = doc(db, "orders", id);
 
-    if (["completed", "cancelled"].includes(newStatus.toLowerCase())) {
-      // Remove order from history
-      updatedOrders = orders.filter((order) => order.id !== id);
-    } else {
-      // Just update status
-      updatedOrders = orders.map((order) =>
-        order.id === id ? { ...order, status: newStatus } : order
-      );
+      if (["completed", "cancelled"].includes(newStatus.toLowerCase())) {
+        // Remove order from Firestore
+        await deleteDoc(orderDoc);
+        setOrders((prev) => prev.filter((order) => order.id !== id));
+      } else {
+        // Update status in Firestore
+        await updateDoc(orderDoc, { status: newStatus });
+        setOrders((prev) =>
+          prev.map((order) =>
+            order.id === id ? { ...order, status: newStatus } : order
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating order:", error);
     }
-
-    setOrders(updatedOrders);
-    localStorage.setItem("orders", JSON.stringify(updatedOrders));
   };
 
   // Function to contact customer via WhatsApp
@@ -32,11 +50,10 @@ export default function AdminOrders() {
     const message = `Hello ${order.name}, regarding your order #${order.id}:
 
 Items:
-${order.items.map(item => `${item.qty} x ${item.name} = Ksh ${item.qty * item.price}`).join("\n")}
+${order.items.map((item) => `${item.qty} x ${item.name} = Ksh ${item.qty * item.price}`).join("\n")}
 
 Total: Ksh ${order.total}`;
 
-    // Replace with your own WhatsApp number if you want the message to go to you
     const whatsappURL = `https://wa.me/${order.phone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, "_blank");
   };
